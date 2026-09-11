@@ -1,0 +1,35 @@
+export const ROUTES = {
+  LOGIN: "/auth/login",
+  VERIFY_EMAIL: "/auth/verify-email",
+  FORGOT_PASSWORD: "/auth/forgot-password",
+  RESET_PASSWORD: "/auth/reset-password",
+
+  MANAGER: {
+    DASHBOARD: "/manager/dashboard",
+    INVENTORY: "/manager/inventory",
+    PRODUCT_NEW: "/manager/products/new",
+    PRODUCT: (id) => `/manager/products/${id}`,
+    PRODUCT_EDIT: (id) => `/manager/products/${id}/edit`,
+    STOCK_HISTORY: (id) => `/manager/products/${id}/stock-history`,
+    INVOICES: "/manager/invoices",
+    INVOICE_NEW: "/manager/invoices/create",
+    INVOICE: (id) => `/manager/invoices/${id}`,
+    CUSTOMERS: "/manager/customers",
+    CUSTOMER_NEW: "/manager/customers/new",
+    CUSTOMER: (id) => `/manager/customers/${id}`,
+    CUSTOMER_EDIT: (id) => `/manager/customers/${id}/edit`,
+    USERS: "/manager/users",
+    USER_NEW: "/manager/users/new",
+    USER: (id) => `/manager/users/${id}`,
+    USER_EDIT: (id) => `/manager/users/${id}/edit`,
+    PROFILE: "/manager/profile",
+  },
+
+  EMPLOYEE: {
+    DASHBOARD: "/employee/dashboard",
+    INVOICES: "/employee/invoices",
+    INVOICE_NEW: "/employee/invoices/create",
+    INVOICE: (id) => `/employee/invoices/${id}`,
+    PROFILE: "/employee/profile",
+  },
+};

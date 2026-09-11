@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root { height: 100%; }
+  body {
+    @apply bg-surface-50 text-ink-900 font-sans antialiased;
+  }
+  *:focus-visible {
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 rounded-md;
+  }
+}
+/* Invoice print: only the document is visible */
+@media print {
+  @page { size: A4; margin: 12mm; }
+
+  body { background: white !important; }
+
+  .no-print,
+  aside,
+  header,
+  nav,
+  footer,
+  button,
+  .toast-container { display: none !important; }
+
+  .print-only { display: block !important; }
+  .print-hide { display: none !important; }
+
+  .invoice-document {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  .invoice-document table { page-break-inside: auto; }
+  .invoice-document tr { page-break-inside: avoid; page-break-after: auto; }
+  .invoice-document thead { display: table-header-group; }
+  .invoice-document tfoot { display: table-footer-group; }
+}
+
+.print-only { display: none; }
