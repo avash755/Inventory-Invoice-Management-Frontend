@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import FormField from "@/components/common/FormField";
@@ -11,42 +11,23 @@ import { ROUTES } from "@/constants/routes";
 import { ROLES } from "@/constants/roles";
 
 export default function Login() {
-  const { login, isAuthenticated, user } = useAuth();
+  const { login } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [identifier, setIdentifier] = useState("");
+  const [identifier, setIdentifier] = useState(""); // username or email
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
-  // Already logged in? Skip login.
-  useEffect(() => {
-    if (isAuthenticated) {
-      const dest =
-        user?.role === ROLES.MANAGER
-          ? ROUTES.MANAGER.DASHBOARD
-          : ROUTES.EMPLOYEE.DASHBOARD;
-      navigate(dest, { replace: true });
-    }
-  }, [isAuthenticated, user, navigate]);
 
   async function onSubmit(e) {
     e.preventDefault();
     setError("");
     setSubmitting(true);
     try {
+      // Backend accepts {username, email}; send identifier as both.
       const res = await login({ username: identifier, email: identifier, password });
-
-      // 2FA step — backend sent OTP, redirect to verify page
-      if (res?.step === "otp") {
-        toast.success("Code sent to your email");
-        navigate("/verify-login", { state: { email: res.email }, replace: true });
-        return;
-      }
-
-      // Fallback: backend logged us in directly (no 2FA)
       toast.success("Welcome back");
       const role = res.user.role;
       const dest =
