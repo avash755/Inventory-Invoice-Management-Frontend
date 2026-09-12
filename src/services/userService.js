@@ -17,4 +17,8 @@ export const userService = {
     const { data } = await api.patch(`/user/${id}`, payload);
     return data;
   },
+  remove: async (id) => {
+    const { data } = await api.delete(`/user/${id}`);
+    return data;
+  },
 };

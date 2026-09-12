@@ -13,6 +13,8 @@ export default function AppLayout() {
 
   const items = NAV[user?.role] ?? [];
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const location = useLocation();
   const pageTitle = NAV[user?.role]?.find((n) => location.pathname.startsWith(n.to))?.label;
 

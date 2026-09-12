@@ -1,8 +1,10 @@
-export function formatCurrency(value, currency = "USD") {
-  const n = Number(value ?? 0);
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 2,
-  }).format(isFinite(n) ? n : 0);
+const formatter = new Intl.NumberFormat("en-BD", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+export function formatCurrency(value) {
+  const n = Number(value);
+  const safe = Number.isNaN(n) ? 0 : n;
+  return `\u09F3${formatter.format(safe)}`;   // ৳ symbol + number
 }
