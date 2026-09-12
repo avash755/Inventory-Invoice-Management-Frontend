@@ -32,8 +32,12 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (payload) => {
     const res = await authService.login(payload);
-    setUser(res.user);
-    return res;
+    return res;                 // just return — do NOT setUser
+  }, []);
+  
+  const setSession = useCallback((userData) => {
+    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
   }, []);
 
   const logout = useCallback(async () => {
@@ -55,6 +59,7 @@ export function AuthProvider({ children }) {
     loading,
     isAuthenticated: !!user,
     login,
+    setSession,
     logout,
     refreshUser,
   };

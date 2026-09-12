@@ -39,6 +39,8 @@ import UserFormPage from "@/pages/manager/UserFormPage";
 
 import Profile from "@/pages/Profile";
 
+import VerifyLogin from "@/pages/auth/VerifyLogin";
+
 function HomeRedirect() {
   const { user, loading } = useAuth();
   if (loading) return <div className="min-h-screen grid place-items-center"><Spinner size="lg" /></div>;
@@ -67,6 +69,7 @@ export default function App() {
               <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmail />} />
               <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
               <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
+              <Route path="/verify-login" element={<VerifyLogin />} />
             </Route>
 
             {/* Protected shell */}
