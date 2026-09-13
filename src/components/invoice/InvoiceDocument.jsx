@@ -17,7 +17,7 @@ export default function InvoiceDocument({ invoice }) {
   const items = invoice.items ?? [];
 
   return (
-    <div className="invoice-document bg-white p-6 sm:p-10 rounded-lg border border-ink-300/60 shadow-card max-w-4xl mx-auto">
+    <div className="invoice-document bg-white p-6 sm:p-10 rounded-lg border border-ink-300/60 shadow-card max-w-3xl mx-auto">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between gap-6 border-b border-ink-300/60 pb-6">
         <div>
@@ -72,12 +72,16 @@ export default function InvoiceDocument({ invoice }) {
             </tr>
           </thead>
           <tbody>
-            <Row label="Subtotal" value={invoice.subtotal} />
-            {invoice.discount > 0 && <Row label="Discount" value={-invoice.discount} />}
-            {invoice.shippingHandling > 0 && <Row label="Shipping / handling" value={invoice.shippingHandling} />}
-            <Row label="Total" value={invoice.total} strong />
-            <Row label="Amount paid" value={-invoice.amountPaid} />
-            <Row label="Balance due" value={invoice.balanceDue} strong danger={invoice.balanceDue > 0} />
+            {items.map((it, i) => (
+              <tr key={i} className="border-b border-ink-300/50">
+                <td className="py-2 text-ink-900 max-w-[280px] break-words [overflow-wrap:anywhere]">
+                  {it.description || it.product?.name || "—"}
+                </td>
+                <td className="py-2 text-right tabular-nums">{it.quantity}</td>
+                <td className="py-2 text-right tabular-nums">{formatCurrency(it.unitPrice)}</td>
+                <td className="py-2 text-right tabular-nums">{formatCurrency(it.total)}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -87,13 +91,20 @@ export default function InvoiceDocument({ invoice }) {
         <table className="min-w-[280px]">
           <tbody>
             <Row label="Subtotal" value={invoice.subtotal} />
-            {invoice.discount > 0 && <Row label="Discount" value={-invoice.discount} />}
-            <Row label="Subtotal less discount" value={(invoice.subtotal || 0) - (invoice.discount || 0)} />
-            <Row label={`Tax (${invoice.taxRate || 0}%)`} value={invoice.totalTax} />
-            {invoice.shippingHandling > 0 && <Row label="Shipping / handling" value={invoice.shippingHandling} />}
+            {invoice.discount > 0 && (
+              <Row label="Discount" value={-invoice.discount} />
+            )}
+            {invoice.shippingHandling > 0 && (
+              <Row label="Shipping / handling" value={invoice.shippingHandling} />
+            )}
             <Row label="Total" value={invoice.total} strong />
             <Row label="Amount paid" value={-invoice.amountPaid} />
-            <Row label="Balance due" value={invoice.balanceDue} strong danger={invoice.balanceDue > 0} />
+            <Row
+              label="Balance due"
+              value={invoice.balanceDue}
+              strong
+              danger={invoice.balanceDue > 0}
+            />
           </tbody>
         </table>
       </div>

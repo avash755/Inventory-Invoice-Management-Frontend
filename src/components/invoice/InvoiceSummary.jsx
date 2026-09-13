@@ -4,7 +4,13 @@ import { formatCurrency } from "@/utils/formatCurrency";
 
 function Row({ label, value, emphasize, danger }) {
   return (
-    <div className={`flex items-center justify-between py-1.5 ${emphasize ? "text-base font-semibold text-ink-900 border-t border-ink-300/60 pt-3 mt-2" : "text-sm text-ink-700"}`}>
+    <div
+      className={`flex items-center justify-between py-1.5 ${
+        emphasize
+          ? "text-base font-semibold text-ink-900 border-t border-ink-300/60 pt-3 mt-2"
+          : "text-sm text-ink-700"
+      }`}
+    >
       <span>{label}</span>
       <span className={`tabular-nums ${danger ? "text-state-danger" : ""}`}>
         {formatCurrency(value)}
@@ -14,16 +20,30 @@ function Row({ label, value, emphasize, danger }) {
 }
 
 export default function InvoiceSummary({ totals, form, onChange }) {
-  const set = (k) => (e) => onChange({ ...form, [k]: e.target.value });
-
-  const maxPaid = totals.balanceDueWithoutPaid ?? totals.total;
+  const maxPaid = totals.total;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="space-y-4">
         <FormField label="Discount (%)" htmlFor="iv-discount">
-          <Input id="iv-discount" type="number" min="0" max="100" step="0.01"
-            value={form.discount} onChange={set("discount")} />
+          <Input
+            id="iv-discount"
+            type="number"
+            min="0"
+            max="100"
+            step="0.01"
+            value={form.discount}
+            onChange={(e) => {
+              const raw = e.target.value;
+              if (raw === "") return onChange({ ...form, discount: "" });
+
+              const n = Number(raw);
+              if (Number.isNaN(n) || n < 0) return;
+
+              const capped = Math.min(n, 100);
+              onChange({ ...form, discount: String(capped) });
+            }}
+          />
         </FormField>
 
         <FormField label="Shipping / handling" htmlFor="iv-ship">
@@ -33,7 +53,15 @@ export default function InvoiceSummary({ totals, form, onChange }) {
             min="0"
             step="0.01"
             value={form.shipping}
-            onChange={set("shipping")}
+            onChange={(e) => {
+              const raw = e.target.value;
+              if (raw === "") return onChange({ ...form, shipping: "" });
+
+              const n = Number(raw);
+              if (Number.isNaN(n) || n < 0) return;
+
+              onChange({ ...form, shipping: raw });
+            }}
           />
         </FormField>
 
@@ -43,7 +71,6 @@ export default function InvoiceSummary({ totals, form, onChange }) {
             type="number"
             min="0"
             step="0.01"
-            max={maxPaid}
             value={form.amountPaid}
             onChange={(e) => {
               const raw = e.target.value;
@@ -56,17 +83,16 @@ export default function InvoiceSummary({ totals, form, onChange }) {
               onChange({ ...form, amountPaid: String(capped) });
             }}
           />
-          <p className="text-xs text-ink-500 mt-1">
-            Max: {formatCurrency(maxPaid)}
-          </p>
         </FormField>
       </div>
 
       <div className="rounded-md bg-surface-50 px-4 py-4">
         <Row label="Subtotal" value={totals.subtotal} />
-        <Row label="Discount" value={-totals.discount} />
-        <Row label="Subtotal less discount" value={totals.taxableAmount} />
-        <Row label={`Tax (${form.taxRate || 0}%)`} value={totals.totalTax} />
+
+        {totals.discount > 0 && (
+          <Row label={`Discount (${totals.discountPct}%)`} value={-totals.discount} />
+        )}
+
         <Row label="Shipping / handling" value={totals.shipping} />
         <Row label="Total" value={totals.total} emphasize />
         <Row label="Amount paid" value={-totals.amountPaid} />
