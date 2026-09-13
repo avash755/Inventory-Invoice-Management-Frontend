@@ -25,7 +25,7 @@ export default function Button({
       type={type}
       disabled={disabled || loading}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors",
+        "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors whitespace-nowrap",
         "disabled:cursor-not-allowed",
         VARIANTS[variant], SIZES[size], className
       )}

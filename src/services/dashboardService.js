@@ -35,7 +35,7 @@ export function buildMonthlyTrend(invoices, monthsBack = 6) {
   for (const inv of invoices) {
     const k = monthKey(inv.createdAt);
     if (!buckets[k]) continue;
-    buckets[k].sales += inv.total || 0;
+    buckets[k].sales += Math.abs(inv.total || 0);
     buckets[k].outstanding += inv.balanceDue || 0;
     buckets[k].count += 1;
   }
@@ -60,14 +60,14 @@ export const dashboardService = {
     const outOfStockProducts = products.filter((p) => p.stock === 0);
 
     const todayInvoices = approved.filter((i) => isToday(i.createdAt));
-    const todaySales = todayInvoices.reduce((s, i) => s + (i.total || 0), 0);
+    const todaySales = todayInvoices.reduce((s, i) => s + Math.abs(i.total || 0), 0);
 
     const outstandingBalance = approved.reduce(
       (s, i) => s + Math.max(i.balanceDue || 0, 0),
       0
     );
 
-    const totalRevenue = approved.reduce((s, i) => s + (i.total || 0), 0);
+   const totalRevenue = approved.reduce((s, i) => s + Math.abs(i.total || 0), 0);
 
     const monthlyTrend = buildMonthlyTrend(approved, 6);
 
