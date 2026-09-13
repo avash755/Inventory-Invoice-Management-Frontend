@@ -43,7 +43,7 @@ export default function CreateInvoice() {
   const [shipTo, setShipTo] = useState({ name: "", companyName: "", address: "", phone: "" });
   const [paymentTerms, setPaymentTerms] = useState("Due on receipt");
   const [items, setItems] = useState([]);
-  const [summary, setSummary] = useState({ discount: "", taxRate: "", shipping: "", amountPaid: "" });
+  const [summary, setSummary] = useState({ discount: "", shipping: "", amountPaid: "" });
   const [remarks, setRemarks] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -85,7 +85,6 @@ export default function CreateInvoice() {
       calculateTotals({
         items: items.map((it) => ({ quantity: it.quantity, unitPrice: it.unitPrice })),
         discount: summary.discount,
-        taxRate: summary.taxRate,
         shipping: summary.shipping,
         amountPaid: summary.amountPaid,
       }),
@@ -116,8 +115,8 @@ export default function CreateInvoice() {
     }
     const paid = Number(summary.amountPaid) || 0;
     if (paid < 0) return "Amount paid cannot be negative.";
-    if (paid > totals.balanceDueWithoutPaid) {
-      return `Amount paid cannot exceed the total (${formatCurrency(totals.balanceDueWithoutPaid)}).`;
+    if (paid > totals.total) {
+      return `Amount paid cannot exceed the total (${formatCurrency(totals.total)}).`;
     }
     return null;
   }
@@ -138,7 +137,6 @@ export default function CreateInvoice() {
       })),
       paymentTerms: paymentTerms || undefined,
       discount: Number(summary.discount) || 0,
-      taxRate: Number(summary.taxRate) || 0,
       shipping: Number(summary.shipping) || 0,
       amountPaid: Number(summary.amountPaid) || 0,
       remarks: remarks?.trim() || undefined,

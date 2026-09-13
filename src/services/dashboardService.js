@@ -18,14 +18,10 @@ function monthKey(d) {
 
 function monthLabel(key) {
   const [y, m] = key.split("-").map(Number);
-  return new Date(y, m - 1, 1).toLocaleString("en-US", {
-    month: "short",
-    year: "2-digit",
-  });
+  return new Date(y, m - 1, 1).toLocaleString("en-US", { month: "short", year: "2-digit" });
 }
 
 export function buildMonthlyTrend(invoices, monthsBack = 6) {
-  // Seed last N months so empty months still appear
   const now = new Date();
   const buckets = {};
   const keys = [];
@@ -54,6 +50,8 @@ export const dashboardService = {
       invoiceService.list(),
     ]);
 
+    const approved = invoices.filter((i) => i.status === "approved");
+
     const totalProducts = products.length;
     const totalStock = products.reduce((s, p) => s + (p.stock || 0), 0);
     const lowStockProducts = products.filter(
@@ -61,19 +59,21 @@ export const dashboardService = {
     );
     const outOfStockProducts = products.filter((p) => p.stock === 0);
 
-    const todayInvoices = invoices.filter((i) => isToday(i.createdAt));
+    const todayInvoices = approved.filter((i) => isToday(i.createdAt));
     const todaySales = todayInvoices.reduce((s, i) => s + (i.total || 0), 0);
 
-    const outstandingBalance = invoices.reduce(
-      (s, i) => s + (i.balanceDue || 0),
+    const outstandingBalance = approved.reduce(
+      (s, i) => s + Math.max(i.balanceDue || 0, 0),
       0
     );
+
+    const totalRevenue = approved.reduce((s, i) => s + (i.total || 0), 0);
+
+    const monthlyTrend = buildMonthlyTrend(approved, 6);
 
     const recentInvoices = [...invoices]
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .slice(0, 5);
-
-    const monthlyTrend = buildMonthlyTrend(invoices, 6);
 
     return {
       totals: {
@@ -84,6 +84,7 @@ export const dashboardService = {
         todayInvoices: todayInvoices.length,
         todaySales,
         outstandingBalance,
+        totalRevenue,
       },
       recentInvoices,
       lowStockProducts: [...lowStockProducts, ...outOfStockProducts]
@@ -95,17 +96,17 @@ export const dashboardService = {
 
   employeeSummary: async () => {
     const invoices = await invoiceService.list();
-    const todayInvoices = invoices.filter((i) => isToday(i.createdAt));
+    const approved = invoices.filter((i) => i.status === "approved");
+
+    const todayInvoices = approved.filter((i) => isToday(i.createdAt));
     const todaySales = todayInvoices.reduce((s, i) => s + (i.total || 0), 0);
+
     const recentInvoices = [...invoices]
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .slice(0, 5);
 
     return {
-      totals: {
-        todayInvoices: todayInvoices.length,
-        todaySales,
-      },
+      totals: { todayInvoices: todayInvoices.length, todaySales },
       recentInvoices,
     };
   },

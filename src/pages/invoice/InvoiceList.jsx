@@ -13,7 +13,7 @@ import { Table, THead, TH, TBody, TR, TD } from "@/components/common/Table";
 import Spinner from "@/components/common/Spinner";
 import ErrorState from "@/components/common/ErrorState";
 import EmptyState from "@/components/common/EmptyState";
-import InvoiceStatusBadge, { getInvoiceStatus } from "@/components/invoice/InvoiceStatusBadge";
+import InvoiceStatusBadge from "@/components/invoice/InvoiceStatusBadge";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { formatDate } from "@/utils/formatDate";
 
@@ -25,7 +25,7 @@ export default function InvoiceList() {
 
   const { data, loading, error, refetch } = useAsync(() => invoiceService.list(), []);
   const [query, setQuery] = useState("");
-  const [status, setStatus] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const invoices = data ?? [];
 
@@ -37,14 +37,11 @@ export default function InvoiceList() {
           const hay = `${inv.invoiceNumber} ${inv.billTo?.contactName ?? ""} ${inv.billTo?.companyName ?? ""}`.toLowerCase();
           if (!hay.includes(q)) return false;
         }
-        if (status !== "all") {
-          const s = getInvoiceStatus(inv).label.toLowerCase();
-          if (s !== status) return false;
-        }
+        if (statusFilter !== "all" && inv.status !== statusFilter) return false;
         return true;
       })
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  }, [invoices, query, status]);
+  }, [invoices, query, statusFilter]);
 
   return (
     <>
@@ -65,14 +62,14 @@ export default function InvoiceList() {
             className="flex-1"
           />
           <Select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="sm:w-44"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="sm:w-52"
           >
             <option value="all">All statuses</option>
-            <option value="paid">Paid</option>
-            <option value="partial">Partial</option>
-            <option value="unpaid">Unpaid</option>
+            <option value="pending">Pending approval</option>
+            <option value="needs_revision">Needs revision</option>
+            <option value="approved">Approved</option>
           </Select>
         </div>
       </Card>
@@ -107,7 +104,7 @@ export default function InvoiceList() {
                 <TH>Customer</TH>
                 <TH className="text-right">Total</TH>
                 <TH className="text-right">Paid</TH>
-                <TH className="text-right">Balance</TH>
+                <TH className="text-right">Balance Due</TH>
                 <TH>Status</TH>
                 <TH className="text-right">Actions</TH>
               </TR>

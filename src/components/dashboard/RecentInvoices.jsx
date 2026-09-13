@@ -44,7 +44,7 @@ export default function RecentInvoices({ invoices }) {
               <TH>Date</TH>
               <TH>Customer</TH>
               <TH className="text-right">Total</TH>
-              <TH className="text-right">Balance</TH>
+              <TH className="text-right">Balance Due</TH>
               <TH>Status</TH>
             </TR>
           </THead>

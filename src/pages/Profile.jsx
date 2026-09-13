@@ -30,9 +30,7 @@ export default function Profile() {
       <Card className="p-5 max-w-2xl">
         <Row label="Username">{user?.username ?? "—"}</Row>
         <Row label="Email">{user?.email ?? "—"}</Row>
-        <Row label="Role">
-          <span className="capitalize">{user?.role ?? "—"}</span>
-        </Row>
+        <Row label="Role">{user?.role === "manager" ? "Manager" : user?.role === "employee" ? "Sales Representative" : "—"}</Row>
       </Card>
 
       <Card className="p-5 max-w-2xl mt-4">

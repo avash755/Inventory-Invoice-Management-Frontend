@@ -11,6 +11,7 @@ const EMPTY = {
   description: "",
   category: "",
   price: "",
+  costPrice: "",
   stock: 0,
   lowStockThreshold: 10,
   unit: "pcs",
@@ -56,6 +57,7 @@ export default function ProductForm({
       description: form.description?.trim() || undefined,
       category: form.category?.trim() || undefined,
       price: Number(form.price),
+      costPrice: Number(form.costPrice) || 0,
       lowStockThreshold: Number(form.lowStockThreshold),
       unit: form.unit.trim(),
     };
@@ -115,47 +117,58 @@ export default function ProductForm({
           </FormField>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <FormField label="Price" required error={errors.price} htmlFor="p-price">
-            <Input
-              id="p-price"
-              type="number"
-              min="0"
-              step="0.01"
-              value={form.price}
-              onChange={set("price")}
-              error={errors.price}
-            />
-          </FormField>
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+  <FormField label="Selling price" required error={errors.price} htmlFor="p-price">
+    <Input
+      id="p-price"
+      type="number"
+      min="0"
+      step="0.01"
+      value={form.price}
+      onChange={set("price")}
+      error={errors.price}
+    />
+  </FormField>
 
-          <FormField
-            label="Initial stock"
-            error={errors.stock}
-            htmlFor="p-stock"
-            hint={mode === "edit" ? "Use “Adjust stock” on the product page." : undefined}
-          >
-            <Input
-              id="p-stock"
-              type="number"
-              min="0"
-              value={form.stock}
-              onChange={set("stock")}
-              error={errors.stock}
-              disabled={mode === "edit"}
-            />
-          </FormField>
+  <FormField label="Cost price" htmlFor="p-cost">
+    <Input
+      id="p-cost"
+      type="number"
+      min="0"
+      step="0.01"
+      value={form.costPrice}
+      onChange={set("costPrice")}
+    />
+  </FormField>
 
-          <FormField label="Low stock threshold" error={errors.lowStockThreshold} htmlFor="p-threshold">
-            <Input
-              id="p-threshold"
-              type="number"
-              min="0"
-              value={form.lowStockThreshold}
-              onChange={set("lowStockThreshold")}
-              error={errors.lowStockThreshold}
-            />
-          </FormField>
-        </div>
+  <FormField
+    label="Initial stock"
+    error={errors.stock}
+    htmlFor="p-stock"
+    hint={mode === "edit" ? "Use “Adjust stock” on the product page." : undefined}
+  >
+    <Input
+      id="p-stock"
+      type="number"
+      min="0"
+      value={form.stock}
+      onChange={set("stock")}
+      error={errors.stock}
+      disabled={mode === "edit"}
+    />
+  </FormField>
+
+  <FormField label="Low stock threshold" error={errors.lowStockThreshold} htmlFor="p-threshold">
+    <Input
+      id="p-threshold"
+      type="number"
+      min="0"
+      value={form.lowStockThreshold}
+      onChange={set("lowStockThreshold")}
+      error={errors.lowStockThreshold}
+    />
+  </FormField>
+</div>
       </Card>
 
       <div className="mt-4 flex justify-end gap-2">

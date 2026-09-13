@@ -53,6 +53,31 @@ export default function Inventory() {
         }
       />
 
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <Card className="p-4">
+          <p className="text-xs text-ink-500">Total products</p>
+          <p className="text-2xl font-semibold">{products.length}</p>
+        </Card>
+        <Card className="p-4">
+          <p className="text-xs text-ink-500">Total stock</p>
+          <p className="text-2xl font-semibold">
+            {products.reduce((s, p) => s + (p.stock || 0), 0)}
+          </p>
+        </Card>
+        <Card className="p-4">
+          <p className="text-xs text-ink-500">Stock value (cost)</p>
+          <p className="text-2xl font-semibold">
+            {formatCurrency(products.reduce((s, p) => s + (p.stock || 0) * (p.costPrice || 0), 0))}
+          </p>
+        </Card>
+        <Card className="p-4">
+          <p className="text-xs text-ink-500">Potential revenue</p>
+          <p className="text-2xl font-semibold">
+            {formatCurrency(products.reduce((s, p) => s + (p.stock || 0) * (p.price || 0), 0))}
+          </p>
+        </Card>
+      </div>
+
       <Card className="mb-4 p-3 sm:p-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <SearchBar
@@ -102,7 +127,8 @@ export default function Inventory() {
                 <TH>Product</TH>
                 <TH>SKU</TH>
                 <TH>Category</TH>
-                <TH className="text-right">Price</TH>
+                <TH className="text-right">Cost</TH>
+                <TH className="text-right">Sell</TH>
                 <TH className="text-right">Stock</TH>
                 <TH>Status</TH>
                 <TH className="text-right">Actions</TH>
@@ -121,6 +147,7 @@ export default function Inventory() {
                   </TD>
                   <TD className="font-mono text-xs">{p.sku}</TD>
                   <TD>{p.category || "—"}</TD>
+                  <TD className="text-right tabular-nums">{formatCurrency(p.costPrice)}</TD>
                   <TD className="text-right tabular-nums">{formatCurrency(p.price)}</TD>
                   <TD className="text-right tabular-nums">
                     {p.stock} {p.unit}

@@ -10,8 +10,8 @@ export default function AuthLayout() {
         </span>
       </header>
 
-      <main className="flex-1 flex items-center justify-center px-4 py-8">
-        <div className="w-full max-w-md">
+      <main className="min-h-screen flex items-start justify-center pt-10 px-4">
+        <div className="w-full max-w-sm">
           <Outlet />
         </div>
       </main>

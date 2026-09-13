@@ -48,12 +48,21 @@ export default function InvoiceItemRow({ item, index, products, onChange, onRemo
       </td>
       <td className="px-3 py-3 w-24">
         <Input
-          type="number"
-          min="1"
-          value={item.quantity}
-          onChange={(e) => set("quantity", e.target.value)}
-          error={!!stockIssue}
-        />
+  type="number"
+  min="1"
+  max={product?.stock ?? undefined}
+  value={item.quantity}
+  onChange={(e) => {
+    const raw = e.target.value;
+    if (raw === "") return set("quantity", "");
+    let n = Number(raw);
+    if (isNaN(n)) return;
+    if (n < 1) n = 1;
+    if (product && n > product.stock) n = product.stock;
+    set("quantity", String(n));
+  }}
+  error={!!stockIssue}
+/>
         {stockIssue && <p className="mt-1 text-xs text-state-danger">{stockIssue}</p>}
       </td>
       <td className="px-3 py-3 w-32">

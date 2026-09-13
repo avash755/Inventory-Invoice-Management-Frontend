@@ -26,7 +26,7 @@ export default function ManagerDashboard() {
 
       {summary.error && <ErrorState message={summary.error} onRetry={summary.refetch} />}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <StatCard label="Products" value={t?.totalProducts ?? 0} loading={summary.loading} />
         <StatCard label="Total stock" value={t?.totalStock ?? 0} loading={summary.loading} />
         <StatCard
@@ -37,9 +37,15 @@ export default function ManagerDashboard() {
           loading={summary.loading}
         />
         <StatCard
-          label="Outstanding"
-          value={formatCurrency(t?.outstandingBalance ?? 0)}
-          variant={t?.outstandingBalance > 0 ? "danger" : "success"}
+          label="Total Revenue"
+          value={formatCurrency(t?.totalRevenue ?? 0)}
+          variant="success"
+          loading={summary.loading}
+        />
+        <StatCard
+          label="Outstanding Balance"
+          value={formatCurrency(Math.abs(t?.outstandingBalance ?? 0))}
+          variant={(t?.outstandingBalance ?? 0) > 0 ? "danger" : "success"}
           loading={summary.loading}
         />
       </div>

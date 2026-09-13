@@ -62,7 +62,7 @@ export default function Users() {
     <>
       <PageHeader
         title="Users"
-        description="Manage managers and employees."
+        description="Manage managers and Sales Representative."
         actions={
           <Button onClick={() => navigate(ROUTES.MANAGER.USER_NEW)}>+ Add user</Button>
         }
@@ -83,7 +83,7 @@ export default function Users() {
           >
             <option value="all">All roles</option>
             <option value="manager">Manager</option>
-            <option value="employee">Employee</option>
+            <option value="employee">Sales Representative</option>
           </Select>
         </div>
       </Card>
@@ -137,7 +137,7 @@ export default function Users() {
                       </Link>
                     </TD>
                     <TD>{u.email}</TD>
-                    <TD className="capitalize">{u.role}</TD>
+                    <TD>{u.role === "manager" ? "Manager" : u.role === "employee" ? "Sales Representative" : u.role}</TD>
                     <TD><UserStatusBadge user={u} /></TD>
                     <TD className="text-right">
                       <div className="flex justify-end gap-1">

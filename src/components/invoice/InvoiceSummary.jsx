@@ -21,26 +21,9 @@ export default function InvoiceSummary({ totals, form, onChange }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="space-y-4">
-        <FormField label="Discount" htmlFor="iv-discount">
-          <Input
-            id="iv-discount"
-            type="number"
-            min="0"
-            step="0.01"
-            value={form.discount}
-            onChange={set("discount")}
-          />
-        </FormField>
-
-        <FormField label="Tax rate (%)" htmlFor="iv-tax">
-          <Input
-            id="iv-tax"
-            type="number"
-            min="0"
-            step="0.01"
-            value={form.taxRate}
-            onChange={set("taxRate")}
-          />
+        <FormField label="Discount (%)" htmlFor="iv-discount">
+          <Input id="iv-discount" type="number" min="0" max="100" step="0.01"
+            value={form.discount} onChange={set("discount")} />
         </FormField>
 
         <FormField label="Shipping / handling" htmlFor="iv-ship">

@@ -50,7 +50,7 @@ export default function UserDetail() {
       <Card className="p-5 max-w-2xl">
         <Row label="Username">{data.username}</Row>
         <Row label="Email">{data.email}</Row>
-        <Row label="Role"><span className="capitalize">{data.role}</span></Row>
+        <Row label="Role">{data.role === "manager" ? "Manager" : data.role === "employee" ? "Sales Representative" : "—"}</Row>
         <Row label="Status"><UserStatusBadge user={data} /></Row>
         {data._id && <Row label="User ID"><span className="font-mono text-xs">{data._id}</span></Row>}
       </Card>

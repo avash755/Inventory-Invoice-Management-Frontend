@@ -26,9 +26,19 @@ export default function Login() {
     setError("");
     setSubmitting(true);
     try {
-      // Backend accepts {username, email}; send identifier as both.
-      const res = await login({ username: identifier, email: identifier, password });
-      toast.success("Welcome back");
+      const res = await login({
+        username: identifier.trim(),
+        email: identifier.trim(),
+        password,
+      });
+    
+      if (res.requiresOTP) {
+        toast.success("Code sent to your email");
+        navigate(ROUTES.LOGIN_OTP, { state: { email: res.email } });
+        return;
+      }
+    
+      // fallback if OTP is disabled
       const role = res.user.role;
       const dest =
         location.state?.from?.pathname ||
@@ -42,7 +52,7 @@ export default function Login() {
   }
 
   return (
-    <Card className="p-6 sm:p-8">
+    <Card className="p-5 sm:p-6">
       <h1 className="text-xl font-semibold text-ink-900">Sign in</h1>
       <p className="mt-1 text-sm text-ink-500">Use your account credentials.</p>
 
@@ -51,7 +61,7 @@ export default function Login() {
           <Input
             id="login-id"
             value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
+            onChange={(e) => setIdentifier(e.target.value.trim())}
             autoComplete="username"
             required
           />

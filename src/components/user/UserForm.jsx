@@ -92,7 +92,7 @@ export default function UserForm({
 
         <FormField label="Role" required error={errors.role} htmlFor="u-role">
           <Select id="u-role" value={form.role} onChange={set("role")}>
-            <option value={ROLES.EMPLOYEE}>Employee</option>
+            <option value={ROLES.EMPLOYEE}>Sales Representative</option>
             <option value={ROLES.MANAGER}>Manager</option>
           </Select>
         </FormField>

@@ -57,7 +57,7 @@ export default function UserFormPage() {
         description={
           isEdit
             ? "Update this user’s name, role, or account status."
-            : "Create a manager or employee account. They’ll receive a verification email."
+            : "Create a manager or Sales Representative account. They’ll receive a verification email."
         }
       />
 

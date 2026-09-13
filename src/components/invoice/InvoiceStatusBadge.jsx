@@ -1,10 +1,13 @@
 import Badge from "@/components/common/Badge";
 
+const MAP = {
+  pending:        { label: "Pending",        variant: "warning" },
+  needs_revision: { label: "Needs revision", variant: "danger"  },
+  approved:       { label: "Approved",       variant: "success" },
+};
+
 export function getInvoiceStatus(inv) {
-  const due = inv.balanceDue ?? 0;
-  if (due <= 0) return { label: "Paid", variant: "success" };
-  if ((inv.amountPaid ?? 0) > 0) return { label: "Partial", variant: "warning" };
-  return { label: "Unpaid", variant: "danger" };
+  return MAP[inv?.status] ?? { label: "Pending", variant: "warning" };
 }
 
 export default function InvoiceStatusBadge({ invoice }) {

@@ -28,7 +28,9 @@ export default function Topbar({ onOpenMobileNav, title }) {
           <p className="text-sm font-medium text-ink-900 leading-tight">
             {user?.username ?? "—"}
           </p>
-          <p className="text-xs text-ink-500 capitalize">{user?.role ?? ""}</p>
+          <p className="text-xs text-ink-500">
+            {user?.role === "manager" ? "Manager" : user?.role === "employee" ? "Sales Representative" : ""}
+          </p>
         </div>
         <Button variant="secondary" size="sm" onClick={logout}>
           Logout
